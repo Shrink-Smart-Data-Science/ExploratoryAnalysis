@@ -7,16 +7,20 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
-library(sf)
+#library(sf)
 library(cluster)
 library(dplyr)
 library(ggplot2)
 library(readr)
 library(Rtsne)
 library(tidyr)
+library(units)
+library(corrplot)
 theme_set(theme_bw())
 
-load("Data/Combined_IA_data.Rdata")
+#load("~/Documents/Data-Sources/Data/Combined_IA_data.Rdata")
+load("~/Documents/ShrinkSmartExploration/data/Combined_IA_data.Rdata") #---loading this to understand the methods but need to update the datasets
+
 ```
 
 ## Outline
@@ -25,16 +29,41 @@ load("Data/Combined_IA_data.Rdata")
 - Principal component analysis (PCA)
 
 ## k - means Clustering Analysis
+To Do Check List:
+- <input type="checkbox" unchecked> Data Updated?? from the changes in the website on May 2021 </input>
+- <input type="checkbox" unchecked> Did I look at the correct variables? </input>
+- <input type="checkbox" unchecked> What variables can I add? What variables can I take out? </input>
+
+
+Things that I should check when completing EDA:
+- <input type="checkbox" unchecked> Correlation Matrix </input>
+- <input type="checkbox" unchecked> Did you need to scale the data? </input>
+- <input type="checkbox" unchecked> What variables are important that are not numeric? </input>
+
+
+What issues am I having in the analysis for the K-means Analysis?
+- <input type="checkbox" unchecked>  </input>
+
 ```{r kmeans}
-#' Compute Gower distance
+#Removing the QOL Columns that are being carried over for some reason --- Will look at the after.
+df_ia_data = ia_data %>% select(-contains('QOL'))
+
+#Cleaning up data to be analyzed in kmeans
 df_ia_data = 
-  as.data.frame(ia_data[,-c(1,2,90)]) %>%
+  df_ia_data[,-c(1,2,69)] %>%
   unnest(dist_private_Elementary:dist_public_Middle) %>%
   mutate_at(vars(starts_with("dist_")), as.numeric) 
 
-i <- grep("dist_", names(df_ia_data))
+#--Pulling in data that is related to the dist variables related to schools
+i <- grep("dist_", names(df_ia_data)) 
 x <- df_ia_data[, i]
-cl <- stats::kmeans(x, 3, nstart = 10)
+cl <- stats::kmeans(x, 2, nstart = 10)
+plot(x, col = cl$cluster)
+
+#--Pulling in data that is related to the exp variables
+i <- grep("exp_", names(df_ia_data)) 
+x <- df_ia_data[, i]
+cl <- stats::kmeans(x, 2, nstart = 10)
 plot(x, col = cl$cluster)
 
 #testing effectiveness
@@ -44,18 +73,18 @@ plot(x, col = init)
 
 par(mfrow = c(1, 2))
 plot(x, col = init)
-centres <- sapply(1:3, function(i) colMeans(x[init == i, ], ))
-centres <- t(centres)
-points(centres[, 1], centres[, 2], pch = 19, col = 1:3)
+centers <- sapply(1:3, function(i) colMeans(x[init == i, ], ))
+centers <- t(centers)
+points(centers[, 1], centers[, 2], pch = 19, col = 1:3)
 
-tmp <- dist(rbind(centres, x))
+tmp <- dist(rbind(centers, x))
 tmp <- as.matrix(tmp)[, 1:3]
 
 ki <- apply(tmp, 1, which.min)
 ki <- ki[-(1:3)]
 
 plot(x, col = ki)
-points(centres[, 1], centres[, 2], pch = 19, col = 1:3)
+points(centers[, 1], centers[, 2], pch = 19, col = 1:3)
 
 clusplot(df_ia_data, cl$cluster, main='2D representation of the Cluster solution',
          color=TRUE, shade=TRUE,
@@ -68,8 +97,10 @@ table(cl1$cluster, cl2$cluster)
 ```
 
 ## Hierarchical clustering
+--To do: figure out to handle the NAs in the dataset. Should they be true NAs that are removed from the dataset or should there some sort of restructure in the data
+
 ```{r}
-d <- df_ia_data[,-1]
+d <- na.omit(df_ia_data[,-c(20)])
 hcl <- hclust(d)
 hcl
 ```
@@ -77,7 +108,18 @@ hcl
 
 ## Principal component analysis (PCA)
 ```{r}
-pairs(, col = iris[, 5], pch = 19)
+pca_ia_data = ia_data_scaled %>% 
+  select(-contains('QOL'))
+
+pca_ia_data = pca_ia_data[,-c(1,2,20,69)] %>% 
+  drop_units() %>% 
+  mutate(n_post_offices = as.numeric(n_post_offices)) 
+
+M <- cor(pca_ia_data)
+corrplot(M, method = "circle")  
+
+irispca <- prcomp(pca_ia_data)
+summary(irispca)
 
 ```
 
