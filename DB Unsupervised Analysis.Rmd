@@ -16,10 +16,16 @@ library(Rtsne)
 library(tidyr)
 library(units)
 library(corrplot)
+library(here)
+library(readxl)
+library(factoextra)
+library(NbClust)
+library(boxr) #This is not working for some reason. Since we have the data using the app locally.
 theme_set(theme_bw())
 
 #load("~/Documents/Data-Sources/Data/Combined_IA_data.Rdata")
-load("~/Documents/ShrinkSmartExploration/data/Combined_IA_data.Rdata") #---loading this to understand the methods but need to update the datasets
+#load("~/Documents/ShrinkSmartExploration/data/Combined_IA_data.Rdata") #---loading this to understand the methods but need to update the datasets
+#source("EDA Data Combine.R")
 
 ```
 
@@ -44,65 +50,86 @@ Things that I should check when completing EDA:
 What issues am I having in the analysis for the K-means Analysis?
 - <input type="checkbox" unchecked>  </input>
 
+Sourced methodology from https://cedric.cnam.fr/fichiers/art_2579.pdf
+```{r}
+ia.dist.data.nested <- 
+  ia.dist.data.nested %>% 
+  remove_rownames %>% 
+  column_to_rownames(var="City")
+
+scaled.ia.dist.data <- scale(ia.dist.data.nested[,-7])
+
+#Using the NBClust function to determine the number of clusters that are important to our data
+
+#Using the Euclidean Distance and Complete Method
+set.seed(26)
+clusterNo = NbClust(scaled.ia.dist.data,distance="euclidean",
+min.nc=2,max.nc=10,method="complete",index="all")
+
+#Using the Euclidean Distance and Single Method (This may be the best method for our work, since we want to find the cities that are the most similar)
+set.seed(26)
+clusterNo = NbClust(scaled.ia.dist.data,distance="euclidean",
+min.nc=2,max.nc=10,method="single",index="all")
+
+#Using the Euclidean Distance and Kmeans Method
+set.seed(13)
+clusterNo = NbClust(scaled.ia.dist.data,distance="euclidean",
+min.nc=2,max.nc=10,method="kmeans",index="all")
+
+#Using the Euclidean Distance and Centroid Method
+set.seed(78)
+clusterNo = NbClust(scaled.ia.dist.data,distance="euclidean",
+min.nc=2,max.nc=10,method="centroid",index="all")
+```
+
+
 ```{r kmeans}
-#Removing the QOL Columns that are being carried over for some reason --- Will look at the after.
-df_ia_data = ia_data %>% select(-contains('QOL'))
+#Let's look at the distance differences in the hospitals only
+scaled.hosp.dist.data <- scale(ia.dist.data.nested[,1]) # Scaling the data by removing the city name and nested data
 
-#Cleaning up data to be analyzed in kmeans
-df_ia_data = 
-  df_ia_data[,-c(1,2,69)] %>%
-  unnest(dist_private_Elementary:dist_public_Middle) %>%
-  mutate_at(vars(starts_with("dist_")), as.numeric) 
+# View the firt 3 rows of the data
+#head(scaled.ia.dist.data, n = 3)
 
-#--Pulling in data that is related to the dist variables related to schools
-i <- grep("dist_", names(df_ia_data)) 
-x <- df_ia_data[, i]
-cl <- stats::kmeans(x, 2, nstart = 10)
-plot(x, col = cl$cluster)
+# Compute k-means with k = 4
+set.seed(123)
+km.res <- kmeans(scaled.ia.dist.data, 2, nstart = 25)
+print(km.res)
 
-#--Pulling in data that is related to the exp variables
-i <- grep("exp_", names(df_ia_data)) 
-x <- df_ia_data[, i]
-cl <- stats::kmeans(x, 2, nstart = 10)
-plot(x, col = cl$cluster)
+aggregate(ia.dist.data.nested[,-7], by=list(cluster=km.res$cluster), mean)
 
-#testing effectiveness
-set.seed(12345)
-init <- sample(3, nrow(x), replace = TRUE)
-plot(x, col = init)
 
-par(mfrow = c(1, 2))
-plot(x, col = init)
-centers <- sapply(1:3, function(i) colMeans(x[init == i, ], ))
-centers <- t(centers)
-points(centers[, 1], centers[, 2], pch = 19, col = 1:3)
+#Add the original data to the clustering 
+dd <- cbind(ia.dist.data.nested[,-7], cluster = km.res$cluster)
+head(dd)
 
-tmp <- dist(rbind(centers, x))
-tmp <- as.matrix(tmp)[, 1:3]
+# Cluster number for each of the observations
+head(km.res$cluster, 10)
 
-ki <- apply(tmp, 1, which.min)
-ki <- ki[-(1:3)]
+# Cluster size
+km.res$size
 
-plot(x, col = ki)
-points(centers[, 1], centers[, 2], pch = 19, col = 1:3)
+#Cluster means
+km.res$centers
 
-clusplot(df_ia_data, cl$cluster, main='2D representation of the Cluster solution',
-         color=TRUE, shade=TRUE,
-         labels=2, lines=0)
-
-#
-cl1 <- kmeans(x, centers = 3, nstart = 10)
-cl2 <- kmeans(x, centers = 3, nstart = 10)
-table(cl1$cluster, cl2$cluster)
+#Visualizing the clusters
+fviz_cluster(km.res, ia.dist.data.nested[,-7], ellipse.type = "norm")
 ```
 
 ## Hierarchical clustering
 --To do: figure out to handle the NAs in the dataset. Should they be true NAs that are removed from the dataset or should there some sort of restructure in the data
 
-```{r}
-d <- na.omit(df_ia_data[,-c(20)])
-hcl <- hclust(d)
-hcl
+```{r Hierarchical}
+
+# Hierarchical clustering
+# ++++++++++++++++++++++++
+# Use hcut() which compute hclust and cut the tree
+hc.cut <- hcut(scaled.ia.dist.data, k = 3, hc_method = "complete")
+# Visualize dendrogram
+#fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
+# Visualize cluster
+fviz_cluster(hc.cut, ellipse.type = "convex")
+
+
 ```
 
 
@@ -120,6 +147,16 @@ corrplot(M, method = "circle")
 
 irispca <- prcomp(pca_ia_data)
 summary(irispca)
+
+```
+
+```{r PAM}
+# PAM clustering
+# ++++++++++++++++++++
+require(cluster)
+pam.res <- pam(scaled.ia.dist.data, 3)
+ # Visualize pam clustering
+fviz_cluster(pam.res, geom = "point", ellipse.type = "norm")
 
 ```
 
