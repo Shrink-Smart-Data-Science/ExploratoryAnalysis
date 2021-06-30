@@ -1,0 +1,168 @@
+---
+title: "SCC Group Presentation"
+author: "Denise Bradford"
+date: "06.30.2021"
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      titleSlideClass: ["right", "top", "my-title"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(dev = 'pdf')
+library(tidyverse)
+library(cluster)
+library(readr)
+library(tidyr)
+library(corrplot)
+library(factoextra)
+library(NbClust)
+library(psych)
+library(kableExtra)
+theme_set(theme_bw())
+library(xaringan)
+library(xaringanthemer)
+style_mono_accent(
+  base_color = "#1c5253",
+  header_font_google = google_font("Josefin Sans"),
+  text_font_google   = google_font("Montserrat", "300", "300i"),
+  code_font_google   = google_font("Fira Mono")
+)
+
+#source("EDA Data Combine.R")
+load("Unsupervised_Data.Rdata")
+load("~/Documents/Data-Sources/Data/distance_Data.Rdata")
+load("~/Documents/Data-Sources/Data/schools.Rdata")
+```
+
+
+## Outline
+
+- Descriptive Statistics
+
+
+- Initial Clustering Analysis
+
+
+- Data Quality Questions
+
+
+---
+
+## Descriptive Statistics (Table Preview)
+We will look at the distance distributions of following:
+
+- Hospitals
+- Post offices
+- Fire Departments
+- Schools (Elementary, Middle and High Schools separately)
+
+```{r, results='asis'}
+ia.dist.data.nested[,-7] %>% 
+  head(6) %>% 
+  kable(format = "html", digits = 2) %>%
+  kableExtra::kable_styling(font_size = 12)
+```
+
+---
+
+## Descriptive Statistics (Histograms)
+A look at the data being used for our clustering analysis. This process could help with identifying any potential outliers. 
+
+```{r histogram, echo = FALSE, fig.height=4, fig.width=10}
+multi.hist(ia.dist.data.nested[,-7],
+           nrow = 2, ncol=3,
+           density=TRUE,freq=FALSE,
+           bcol="lightblue",
+      dcol= c("red","blue"),dlty=c("solid", "dotted"),
+      main=colnames(data))
+```
+
+---
+
+## Initial Clustering Analysis
+What does a cluster mean?
+
+- In statistics, it is used to form natural groups in a population. Iowa cities are our population. 
+
+We are looking to identify small towns that are similar in nature. After scaling the data, we were able to find the optimal number of clusters. As seen below, we will look at 3 clusters for the "optimal" natural group. 
+
+.center[
+```{r clustering, echo = FALSE, fig.height=4, fig.width=5}
+fviz_nbclust(scaled.ia.dist.data, kmeans, method ="silhouette") + 
+  theme_minimal()  
+```
+]
+---
+
+## Data Quality Questions
+
+- Based on the inital clustering done, we found something interesting that only Iowans will understand. 
+- As you can see, the town Craig and Des Moines are in the same cluster. (What's wrong??) 
+
+.pull-left[
+```{r echo = FALSE, warning=FALSE, results='asis'}
+# PAM clustering
+#fviz_nbclust(scaled.ia.dist.data, kmeans, method ="silhouette") + theme_minimal()
+# ++++++++++++++++++++
+require(cluster)
+pam.res <- pam(scaled.ia.dist.data, 4, stand = TRUE)
+#pam.res
+ # Visualize pam clustering
+#fviz_cluster(pam.res, geom = "point", ellipse.type = "norm")
+pam.res$medoids %>% 
+  kable(format = "html", digits = 2)  %>%
+  kableExtra::kable_styling(font_size = 10)
+
+```
+]
+
+.right-plot[
+```{r echo = FALSE, warning=FALSE, fig.height=4, fig.width=10}
+
+fviz_cluster(pam.res, 
+             palette = hcl.colors(4, "viridis"), 
+             ellipse.type ="euclid",
+             repel =TRUE,
+             ggtheme =theme_minimal()) 
+
+
+```
+]
+
+---
+
+## Data Quality Questions
+We look at Ames, IA to make sure that the data are correct. In which we found that our data on schools are incorrect. Ames should have at least one High or Middle School in town.
+```{r echo = FALSE, results='asis'}
+ia_city_school_dist %>% 
+  filter(City == "Ames") %>% 
+  kable(format = "html", digits = 2) %>%
+  kableExtra::kable_styling(font_size = 12)
+
+
+```
+```{r echo = FALSE, results='asis'}
+school_sm %>%
+  filter(mailing_city %in% c("Ames", "Sioux City")) %>% 
+  head(10) %>%
+  kable(format = "html") %>%
+  kableExtra::kable_styling(font_size = 12)
+  
+```
+
+---
+
+## Next Steps
+
+- While it may seem like a small issue related to source data in terms of schools, it pushes our data validation into a direction of extrapolation on other source issues. As a result, we will need a subject matter expert of Iowa towns, because I've only driven through Iowa on a trip to Chicago :-). 
+
+
+- Our steps to manually check rows of data could become exhausting quickly, a goal to provide an automated validation solution will help in minimizing data quality issues. 
+
+
+- The data being open source has it's caveats, which just one of potentially many are highlighted here and could be a catalyst to reaching out directly to data providers directly.

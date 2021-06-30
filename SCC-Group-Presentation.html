@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>SCC Group Presentation</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Denise Bradford" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: right, top, my-title, title-slide
+
+# SCC Group Presentation
+### Denise Bradford
+### 06.30.2021
+
+---
+
+
+
+
+
+## Outline
+
+- Descriptive Statistics
+
+
+- Initial Clustering Analysis
+
+
+- Data Quality Questions
+
+
+---
+
+## Descriptive Statistics (Table Preview)
+We will look at the distance distributions of following:
+
+- Hospitals
+- Post offices
+- Fire Departments
+- Schools (Elementary, Middle and High Schools separately)
+
+&lt;table class="table" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; hosp.dist.mi &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; fire.dist.mi &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dist.public.Elementary &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dist.public.Middle &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dist.public.High &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; postoff.dist.mi &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Ackley &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.21 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.36 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.36 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36.68 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.01 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Ackworth &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.56 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.51 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.49 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.83 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Adair &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.90 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.08 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 33.96 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 33.96 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 40.28 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.07 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Adel &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.77 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.18 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.76 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.30 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.45 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Afton &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.23 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.99 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.99 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 45.89 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.07 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Agency &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.59 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.11 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.03 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 46.24 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.07 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+## Descriptive Statistics (Histograms)
+A look at the data being used for our clustering analysis. This process could help with identifying any potential outliers. 
+
+![](SCC-Group-Presentation_files/figure-html/histogram-1.pdf)&lt;!-- --&gt;
+
+---
+
+## Initial Clustering Analysis
+What does a cluster mean?
+
+- In statistics, it is used to form natural groups in a population. Iowa cities are our population. 
+
+We are looking to identify small towns that are similar in nature. After scaling the data, we were able to find the optimal number of clusters. As seen below, we will look at 3 clusters for the "optimal" natural group. 
+
+.center[
+![](SCC-Group-Presentation_files/figure-html/clustering-1.pdf)&lt;!-- --&gt;
+]
+---
+
+## Data Quality Questions
+
+- Based on the inital clustering done, we found something interesting that only Iowans will understand. 
+- As you can see, the town Craig and Des Moines are in the same cluster. (What's wrong??) 
+
+.pull-left[
+&lt;table class="table" style="font-size: 10px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; hosp.dist.mi &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; fire.dist.mi &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dist.public.Elementary &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dist.public.Middle &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dist.public.High &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; postoff.dist.mi &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Colfax &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.17 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.74 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.69 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.71 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.63 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Delaware &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.64 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.24 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.76 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.68 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.03 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.44 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Fredericksburg &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.03 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.56 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.58 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.55 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.36 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.66 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Pilot Mound &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.77 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.56 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.43 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.03 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+.right-plot[
+![](SCC-Group-Presentation_files/figure-html/unnamed-chunk-3-1.pdf)&lt;!-- --&gt;
+]
+
+---
+
+## Data Quality Questions
+We look at Ames, IA to make sure that the data are correct. In which we found that our data on schools are incorrect. Ames should have at least one High or Middle School in town.
+&lt;table class="table" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; City &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; school.city &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; school.county &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dist &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dist_public_Elementary &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dist_public_High &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dist_public_Middle &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Ames &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ames &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Story &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1676.39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.04 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Ames &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ankeny &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Polk &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 33230.02 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20.65 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20.65 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;table class="table" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; mailing_city &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; county &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; district_school_id &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; public &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; type &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; school.long &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; school.lat &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sioux City &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Woodbury &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 423 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Elementary &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -96.40744 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42.54413 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Ames &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Story &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 440 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Elementary &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -93.62642 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42.04201 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Ames &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Story &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 961 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Elementary &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -93.61898 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42.05119 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Ames &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Story &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8104 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Elementary &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -93.63026 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42.05011 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sioux City &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Woodbury &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 607 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Elementary &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -96.33995 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42.46183 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sioux City &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Woodbury &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 145 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; High &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -96.44396 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42.51184 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sioux City &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Woodbury &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8217 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Elementary &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -96.39937 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42.49695 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sioux City &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Woodbury &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8106 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; High &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -96.40645 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42.50146 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sioux City &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Woodbury &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8116 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Middle &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -96.35395 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42.45152 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sioux City &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Woodbury &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8111 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Elementary &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -96.47303 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42.52020 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+## Next Steps
+
+- While it may seem like a small issue related to source data in terms of schools, it pushes our data validation into a direction of extrapolation on other source issues. As a result, we will need a subject matter expert of Iowa towns, because I've only driven through Iowa on a trip to Chicago :-). 
+
+
+- Our steps to manually check rows of data could become exhausting quickly, a goal to provide an automated validation solution will help in minimizing data quality issues. 
+
+
+- The data being open source has it's caveats, which just one of potentially many are highlighted here and could be a catalyst to reaching out directly to data providers directly.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
